@@ -11,13 +11,6 @@ The CIDR provider is used to manipulate network addresses, such as IPv4 and IPv6
 
 ## Example Usage
 
-```terraform
-data "cidr_network" "example1" {
-  prefix = "192.168.2.56/29"
-}
+{{tffile "examples/provider/provider.tf"}}
 
-data "cidr_network" "example2" {
-  ip   = "192.168.2.57"
-  mask = "255.255.255.248"
-}
-```
+{{- /* No schema in this provider, so no need for this: .SchemaMarkdown | trimspace */ -}}
