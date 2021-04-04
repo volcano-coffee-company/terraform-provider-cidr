@@ -33,6 +33,7 @@ func dataSourceNetwork() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				Computed:         true,
+				RequiredWith:     []string{"ip", "mask"},
 				ValidateDiagFunc: validation.ToDiagFunc(validation.IsIPAddress),
 			},
 			"mask": {
@@ -40,7 +41,6 @@ func dataSourceNetwork() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				Computed:         true,
-				RequiredWith:     []string{"ip"},
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
 			},
 			"mask_bits": {
