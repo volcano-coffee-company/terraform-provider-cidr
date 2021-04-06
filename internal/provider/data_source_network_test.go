@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -190,6 +191,45 @@ func TestAccDataSourceNetwork_IPv6Prefix(t *testing.T) {
 	})
 }
 
+func TestAccDataSourceNetwork_MissingArgs(t *testing.T) {
+	resource.UnitTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccDataSourceNetworkMissingArgs,
+				ExpectError: regexp.MustCompile("one of `ip,prefix` must be specified"),
+			},
+		},
+	})
+}
+
+func TestAccDataSourceNetwork_MissingIP(t *testing.T) {
+	resource.UnitTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccDataSourceNetworkMissingIP,
+				ExpectError: regexp.MustCompile("one of `ip,prefix` must be specified"),
+			},
+		},
+	})
+}
+
+func TestAccDataSourceNetwork_MissingMask(t *testing.T) {
+	resource.UnitTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccDataSourceNetworkMissingMask,
+				ExpectError: regexp.MustCompile("all of `ip,mask` must be specified"),
+			},
+		},
+	})
+}
+
 func testAccDataSourceNetworkPrefix(prefix string) string {
 	return fmt.Sprintf(`
 data "cidr_network" "test" {
@@ -206,3 +246,20 @@ data "cidr_network" "test" {
 }
 `, ip, mask)
 }
+
+const testAccDataSourceNetworkMissingArgs = `
+data "cidr_network" "test" {
+}
+`
+
+const testAccDataSourceNetworkMissingIP = `
+data "cidr_network" "test" {
+  mask = "255.255.255.0"
+}
+`
+
+const testAccDataSourceNetworkMissingMask = `
+data "cidr_network" "test" {
+  ip = "192.168.2.56"
+}
+`
