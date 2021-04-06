@@ -29,16 +29,16 @@ data "cidr_network" "example2" {
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **ip** (String) The IPv4 or IPv6 address.
-- **mask** (String) The IPv4 or IPv6 network mask.
+- **ip** (String) The IPv4 or IPv6 address (such as `10.0.0.1` or `2001:db8::68`).
+- **mask** (String) The IPv4 or IPv6 network mask (such as `255.0.0.0` or `ffff:ffff:ffff::`).
 - **prefix** (String) The IPv4 or IPv6 address and network mask in CIDR notation. The address may denote a specific address (using a host identifier, such as `10.0.0.1/8`), or the beginning address of an entire network (using a host identifier of 0, such as `10.0.0.0/8`).
 
 ### Read-Only
 
-- **broadcast** (String) The IPv4 broadcast address.
-- **first_ip** (String) The first IPv4 or IPv6 address in the CIDR range.
-- **last_ip** (String) The last IPv4 or IPv6 address in the CIDR range.
-- **mask_bits** (Number) The number bits in the IPv4 or IPv6 network mask.
-- **network** (String) The IPv4 or IPv6 network in CIDR notation.
+- **broadcast** (String) The IPv4 broadcast address (such as `10.255.255.255`).
+- **first_ip** (String) The first IPv4 or IPv6 address in the CIDR range (such as `10.0.0.1` or `2001:db8::`).
+- **last_ip** (String) The last IPv4 or IPv6 address in the CIDR range (such as `10.255.255.254` or `2001:db8:0:ffff:ffff:ffff:ffff:ffff`).
+- **mask_bits** (Number) The number of bits in the IPv4 or IPv6 network mask.
+- **network** (String) The IPv4 or IPv6 network in CIDR notation (such as `10.0.0.0/8` or `2001:db8::/48`).
 
 
