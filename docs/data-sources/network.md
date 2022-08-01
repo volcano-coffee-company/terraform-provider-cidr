@@ -37,6 +37,7 @@ data "cidr_network" "example2" {
 
 - **broadcast** (String) The IPv4 broadcast address (such as `10.255.255.255`).
 - **first_ip** (String) The first IPv4 or IPv6 address in the CIDR range (such as `10.0.0.1` or `2001:db8::`).
+- **hostnum** (String) The hostnum (such as `1`).  Can be used in cidrhost
 - **last_ip** (String) The last IPv4 or IPv6 address in the CIDR range (such as `10.255.255.254` or `2001:db8:0:ffff:ffff:ffff:ffff:ffff`).
 - **mask_bits** (Number) The number of bits in the IPv4 or IPv6 network mask.
 - **network** (String) The IPv4 or IPv6 network in CIDR notation (such as `10.0.0.0/8` or `2001:db8::/48`).

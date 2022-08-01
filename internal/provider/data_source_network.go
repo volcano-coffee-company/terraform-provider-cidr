@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"math/big"
 	"net"
 
 	"github.com/apparentlymart/go-cidr/cidr"
@@ -68,6 +69,11 @@ func dataSourceNetwork() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
+			"hostnum": {
+				Description: "The hostnum (such as `1`).  Can be used in cidrhost as hostnum",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
 		},
 	}
 }
@@ -78,6 +84,7 @@ func dataSourceNetworkRead(ctx context.Context, d *schema.ResourceData, meta int
 	var ip net.IP
 	var mask net.IPMask
 	var network *net.IPNet
+	var hostnum string
 
 	if v, ok := d.GetOk("prefix"); ok {
 		ip, network, err = net.ParseCIDR(v.(string))
@@ -105,6 +112,23 @@ func dataSourceNetworkRead(ctx context.Context, d *schema.ResourceData, meta int
 		}
 	}
 
+	masked := net.IP(network.Mask)
+
+	hostip := make(net.IP, len(ip))
+	copy(hostip, ip)
+
+	if len(masked) == net.IPv4len && len(hostip) == net.IPv6len {
+		hostip = hostip[12:]
+	}
+
+	for i, b := range masked {
+		hostip[i] = hostip[i] &^ b
+	}
+
+	ipint := big.NewInt(0)
+	ipint.SetBytes(hostip)
+	hostnum = ipint.Text(10)
+
 	firstIP, lastIP := cidr.AddressRange(network)
 
 	ones, _ := network.Mask.Size()
@@ -128,6 +152,7 @@ func dataSourceNetworkRead(ctx context.Context, d *schema.ResourceData, meta int
 	d.Set("first_ip", firstIP.String())
 	d.Set("last_ip", lastIP.String())
 	d.Set("broadcast", broadcast.String())
+	d.Set("hostnum", hostnum)
 
 	d.SetId(network.String())
 
